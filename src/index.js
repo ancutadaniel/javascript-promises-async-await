@@ -13,11 +13,12 @@ const getBooksAndMoviesPromise = getBooksAndMovies();
 getBooksAndMoviesPromise.then(results => {console.log('getBooksAndMoviesPromise',results)});
 
 function getBooksOrMovies() {
-    return Promise.race([fetchBooks(),fetchMovies()]).then(results => results).catch(error => console.log("Error waiting for the promise race", error));
+    return Promise.race([fetchBooks(),fetchMovies()]).then(results => results)
+        .catch(error => console.log("Error waiting for the promise race", error));
 }
 
 const getBooksOrMoviesPromise = getBooksOrMovies();
-getBooksOrMoviesPromise.then(results => {console.log('getBooksOrMoviesPromise', results)})
+getBooksOrMoviesPromise.then(results => { console.log('getBooksOrMoviesPromise', results)})
 
 
 async function getBooksAndMoviesAsync() {
@@ -28,3 +29,26 @@ async function getBooksAndMoviesAsync() {
         console.log("Error fetching books and movies", error);
     }
 }
+
+
+async function getBooksOrMoviesAsync() {
+    try {
+        const values = await Promise.race([asyncFetchBooks(),asyncFetchMovies()])
+        return values;
+    } catch (error) {
+        console.error("Error waiting for the promise race", error);
+    }
+}
+
+getBooksAndMoviesAsync().then(results => {
+    console.log("movies and books", {
+        movies: results.movies,
+        books: results.books
+    });
+})
+
+getBooksOrMoviesAsync().then(results => {
+    console.log("movies OR books", {
+        results,
+    });
+})
